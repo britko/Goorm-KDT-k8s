@@ -1,0 +1,38 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  # Server
+  config.vm.define "Linux-Ubuntu-server" do |cfg|
+    cfg.vm.box = "ubuntu/focal64"
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "Linux-Ubuntu-server"
+      vb.cpus = 2
+      vb.memory = 2048
+      vb.customize ["modifyvm", :id, "--groups", "/Goorm KDT"]
+    end
+    cfg.vm.host_name = "Linux-Ubuntu-server"
+    cfg.vm.network "private_network", ip: "192.168.10.10"
+    cfg.vm.network "forwarded_port", guest: 22, host: 10030, auto_correct: true, id: "ssh"
+    cfg.vm.synced_folder "../data", "/vagrant", disabled: true
+    cfg.vm.provision "shell", path: "install_pkg.sh"
+    cfg.vm.provision "shell", path: "config.sh"
+  end
+
+  # Clinet
+  config.vm.define "Linux-Ubuntu-client" do |cfg|
+    cfg.vm.box = "ubuntu/focal64"
+    cfg.vm.provider "virtualbox" do |vb|
+      vb.name = "Linux-Ubuntu-client"
+      vb.cpus = 1
+      vb.memory = 1024
+      vb.customize ["modifyvm", :id, "--groups", "/Goorm KDT"]
+    end
+    cfg.vm.host_name = "Linux-Ubuntu-client"
+    cfg.vm.network "private_network", ip: "192.168.1.101"
+    cfg.vm.network "forwarded_port", guest: 22, host: "10040", auto_correct: true, id: "ssh"
+    cfg.vm.synced_folder "../data", "/vagrant", disabled: true
+    cfg.vm.provision "shell", path: "install_pkg.sh"
+    cfg.vm.provision "shell", path: "config.sh"
+  end
+end
