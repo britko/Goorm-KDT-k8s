@@ -3,53 +3,53 @@
 
 Vagrant.configure("2") do |config|
   # Ubuntu Server
-  config.vm.define "Linux-Ubuntu-server" do |cfg|
+  config.vm.define "Ubuntu-server-main" do |cfg|
     cfg.vm.box = "ubuntu/focal64"
     cfg.vm.provider "virtualbox" do |vb|
-      vb.name = "Linux-Ubuntu-server"
+      vb.name = "Ubuntu-server-main"
       vb.cpus = 2
       vb.memory = 2048
       vb.customize ["modifyvm", :id, "--groups", "/Goorm KDT"]
     end
-    cfg.vm.host_name = "Linux-Ubuntu-server"
+    cfg.vm.host_name = "Ubuntu-server-main"
     cfg.vm.network "private_network", ip: "192.168.10.10"
     cfg.vm.network "forwarded_port", guest: 22, host: 10030, auto_correct: true, id: "ssh"
     cfg.vm.synced_folder "../data", "/vagrant", disabled: true
-    cfg.vm.provision "shell", path: "install_pkg.sh"
-    cfg.vm.provision "shell", path: "config.sh"
+    cfg.vm.provision "shell", path: "./ShellScript_Ubuntu/install_pkg.sh"
+    cfg.vm.provision "shell", path: "./ShellScript_Ubuntu/config.sh"
   end
 
   # Ubuntu Clinet
-  config.vm.define "Linux-Ubuntu-client" do |cfg|
+  config.vm.define "Ubuntu-client" do |cfg|
     cfg.vm.box = "ubuntu/focal64"
     cfg.vm.provider "virtualbox" do |vb|
-      vb.name = "Linux-Ubuntu-client"
+      vb.name = "Ubuntu-client"
       vb.cpus = 1
       vb.memory = 1024
       vb.customize ["modifyvm", :id, "--groups", "/Goorm KDT"]
     end
-    cfg.vm.host_name = "Linux-Ubuntu-client"
-    cfg.vm.network "private_network", ip: "192.168.1.101"
+    cfg.vm.host_name = "Ubuntu-client"
+    cfg.vm.network "private_network", ip: "192.168.10.101"
     cfg.vm.network "forwarded_port", guest: 22, host: "10040", auto_correct: true, id: "ssh"
     cfg.vm.synced_folder "../data", "/vagrant", disabled: true
-    cfg.vm.provision "shell", path: "install_pkg.sh"
-    cfg.vm.provision "shell", path: "config.sh"
+    cfg.vm.provision "shell", path: "./ShellScript_Ubuntu/install_pkg.sh"
+    cfg.vm.provision "shell", path: "./ShellScript_Ubuntu/config.sh"
   end
 
   # CentOS
-  config.vm.define "Linux-CentOS" do |cfg|
+  config.vm.define "Linux-CentOS7" do |cfg|
     cfg.vm.box = "centos/7"
     cfg.vm.provider "virtualbox" do |vb|
-      vb.name = "Linux-CentOS"
+      vb.name = "Linux-CentOS7"
       vb.cpus = 1
       vb.memory = 1024
       vb.customize ["modifyvm", :id, "--groups", "/Goorm KDT"]
     end
-    cfg.vm.host_name = "Linux-CentOS"
-    cfg.vm.network "private_network", ip: "192.168.1.102"
+    cfg.vm.host_name = "Linux-CentOS7"
+    cfg.vm.network "private_network", ip: "192.168.10.20"
     cfg.vm.network "forwarded_port", guest: 22, host: "10050", auto_correct: true, id: "ssh"
     cfg.vm.synced_folder "../data", "/vagrant", disabled: true
-    cfg.vm.provision "shell", path: "install_pkg.sh"
-    cfg.vm.provision "shell", path: "config.sh"
+    cfg.vm.provision "shell", path: "./ShellScript_CentOS/install_pkg.sh"
+    cfg.vm.provision "shell", path: "./ShellScript_CentOS/config.sh"
   end
 end
